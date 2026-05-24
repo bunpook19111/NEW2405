@@ -1,0 +1,177 @@
+{
+  "generated_at": "2026-05-24T13:34:07.530613+07:00",
+  "observation": {
+    "ts": "2025-11-30T16:16:00+07:00",
+    "level_msl": 11.64,
+    "discharge_cms": 1700.0,
+    "bank_msl": 13.0,
+    "source": "data/inburi_history.csv",
+    "quality_note": ""
+  },
+  "target_q_cms": 1700.0,
+  "forecast": [
+    {
+      "horizon_h": 3,
+      "expected_level_msl": 11.64,
+      "low_msl": 11.51,
+      "high_msl": 11.76,
+      "expected_change_m": -0.0,
+      "eta_label": "คาดว่ามวลน้ำตอบสนองปานกลาง ราว 10-24 ชม."
+    },
+    {
+      "horizon_h": 6,
+      "expected_level_msl": 11.63,
+      "low_msl": 11.51,
+      "high_msl": 11.76,
+      "expected_change_m": -0.01,
+      "eta_label": "คาดว่ามวลน้ำตอบสนองปานกลาง ราว 10-24 ชม."
+    },
+    {
+      "horizon_h": 12,
+      "expected_level_msl": 11.63,
+      "low_msl": 11.48,
+      "high_msl": 11.78,
+      "expected_change_m": -0.01,
+      "eta_label": "คาดว่ามวลน้ำตอบสนองปานกลาง ราว 10-24 ชม."
+    },
+    {
+      "horizon_h": 24,
+      "expected_level_msl": 11.6,
+      "low_msl": 11.42,
+      "high_msl": 11.79,
+      "expected_change_m": -0.04,
+      "eta_label": "คาดว่ามวลน้ำตอบสนองปานกลาง ราว 10-24 ชม."
+    },
+    {
+      "horizon_h": 48,
+      "expected_level_msl": 11.59,
+      "low_msl": 11.37,
+      "high_msl": 11.81,
+      "expected_change_m": -0.05,
+      "eta_label": "คาดว่ามวลน้ำตอบสนองปานกลาง ราว 10-24 ชม."
+    }
+  ],
+  "risk": {
+    "level": "เฝ้าระวัง",
+    "emoji": "🟡",
+    "color": "yellow",
+    "freeboard_m": 1.36,
+    "score": 55,
+    "advice": "ติดตามสถานการณ์ต่อเนื่อง และเตรียมยกของหากอยู่ริมน้ำ",
+    "public_words": "เริ่มเฝ้าระวัง"
+  },
+  "validation": {
+    "confidence": 92,
+    "issues": [],
+    "q_range": [
+      700.0,
+      2900.0
+    ],
+    "model_rmse_m": 0.12,
+    "can_auto_post": true
+  },
+  "caption": "🟡 รอดมั้ย? รายงานน้ำเจ้าพระยา อ.อินทร์บุรี\nอัปเดต 30/11/2025 16:16 น.\n\n🌊 ระดับน้ำตอนนี้: 11.64 ม.รทก.\n📏 เหลือจากตลิ่ง: 1.36 ม.\n💧 ท้ายเขื่อนเจ้าพระยา: 1,700 ลบ.ม./วิ\n\n🔮 แนวโน้มจากข้อมูลย้อนหลัง\nอีก 6 ชม.: 11.63 ม. (-0.01 ม.)\nอีก 12 ชม.: 11.63 ม. (-0.01 ม.)\nอีก 24 ชม.: 11.60 ม. ช่วงเป็นไปได้ 11.42-11.79 ม.\n⏳ คาดว่ามวลน้ำตอบสนองปานกลาง ราว 10-24 ชม.\n\n🚦 สถานะ: เฝ้าระวัง — เริ่มเฝ้าระวัง\n✅ ความเชื่อมั่นข้อมูล: 92%\nคำแนะนำ: ติดตามสถานการณ์ต่อเนื่อง และเตรียมยกของหากอยู่ริมน้ำ\n\nหมายเหตุ: เป็นระบบช่วยเฝ้าระวังชุมชน ไม่ใช่ประกาศทางราชการ\n#รอดมั้ย #อินทร์บุรี #เจ้าพระยา #เฝ้าระวังน้ำ\n\n🧭 เส้นทางน้ำ: ตอนนี้ระดับน้ำอินทร์บุรีอยู่ที่ 11.64 ม.รทก. | เหลือห่างตลิ่ง 1.36 ม. | มวลน้ำจากชัยนาทอยู่ในระดับ: มวลน้ำปานกลาง | คาดว่าการเปลี่ยนแปลงจากเขื่อนจะมาถึงอินทร์บุรี ประมาณ 9-18 ชม. หรือช่วง 24/05 22:25–25/05 07:16 | อีก 12 ชม. น้ำมีแนวโน้มเปลี่ยน -0.01 ม. | กรอบสูงสุด 24 ชม. ที่ควรเฝ้าระวัง: 11.79 ม.รทก.",
+  "image_path": "outputs/inburi_friendly_water_watch.svg",
+  "image_png_path": "outputs/inburi_friendly_water_watch.png",
+  "water_mass": {
+    "source_station": "C.13",
+    "distance_km": 62.0,
+    "speed_kmh_low": 3.5,
+    "speed_kmh_high": 7.0,
+    "eta_low_h": 8.9,
+    "eta_high_h": 17.7,
+    "eta_window_text": "ประมาณ 9-18 ชม. หรือช่วง 24/05 22:25–25/05 07:16",
+    "volume_label": "มวลน้ำปานกลาง",
+    "reasoning": "ใช้ปริมาณระบายล่าสุดและระยะทางชัยนาท→อินทร์บุรีเป็นฐาน เพราะยังไม่มีค่าเปลี่ยนแปลงรอบก่อน"
+  },
+  "route": {
+    "route_name": "แม่น้ำเจ้าพระยา → อินทร์บุรี",
+    "stations": [
+      {
+        "code": "C.2",
+        "name_th": "นครสวรรค์",
+        "province": "นครสวรรค์",
+        "km_to_inburi": 155,
+        "role": "upstream",
+        "level_msl": null,
+        "discharge_cms": null,
+        "trend_3h_m": null,
+        "source": "pending_fetcher"
+      },
+      {
+        "code": "C.13",
+        "name_th": "เขื่อนเจ้าพระยา/ชัยนาท",
+        "province": "ชัยนาท",
+        "km_to_inburi": 62,
+        "role": "dam",
+        "level_msl": null,
+        "discharge_cms": 1700.0,
+        "trend_3h_m": null,
+        "source": "HII/RID best-effort"
+      },
+      {
+        "code": "SINGBURI",
+        "name_th": "เมืองสิงห์บุรี",
+        "province": "สิงห์บุรี",
+        "km_to_inburi": 18,
+        "role": "midstream",
+        "level_msl": null,
+        "discharge_cms": null,
+        "trend_3h_m": null,
+        "source": "pending_fetcher"
+      },
+      {
+        "code": "INBURI",
+        "name_th": "อินทร์บุรี",
+        "province": "สิงห์บุรี",
+        "km_to_inburi": 0,
+        "role": "target",
+        "level_msl": 11.64,
+        "discharge_cms": 1700.0,
+        "trend_3h_m": null,
+        "source": "data/inburi_history.csv"
+      },
+      {
+        "code": "ANGTHONG",
+        "name_th": "อ่างทอง",
+        "province": "อ่างทอง",
+        "km_to_inburi": -45,
+        "role": "downstream",
+        "level_msl": null,
+        "discharge_cms": null,
+        "trend_3h_m": null,
+        "source": "pending_fetcher"
+      }
+    ]
+  },
+  "public_explain": "ตอนนี้ระดับน้ำอินทร์บุรีอยู่ที่ 11.64 ม.รทก. | เหลือห่างตลิ่ง 1.36 ม. | มวลน้ำจากชัยนาทอยู่ในระดับ: มวลน้ำปานกลาง | คาดว่าการเปลี่ยนแปลงจากเขื่อนจะมาถึงอินทร์บุรี ประมาณ 9-18 ชม. หรือช่วง 24/05 22:25–25/05 07:16 | อีก 12 ชม. น้ำมีแนวโน้มเปลี่ยน -0.01 ม. | กรอบสูงสุด 24 ชม. ที่ควรเฝ้าระวัง: 11.79 ม.รทก.",
+  "model": {
+    "name": "empirical-local-rating-lag-v1",
+    "rmse_m": 0.12,
+    "q_range": [
+      700.0,
+      2900.0
+    ],
+    "history_rows_used": 235
+  },
+  "history_summary": {
+    "rows": 237,
+    "q_min": 700.0,
+    "q_max": 2900.0,
+    "level_min": 7.61,
+    "level_max": 14.46,
+    "start": "2025-07-21T11:13:00+07:00",
+    "end": "2025-11-30T16:16:00+07:00"
+  },
+  "ai_council": {
+    "mode": "deterministic_fallback",
+    "available_models": {
+      "gemini": false,
+      "claude": false,
+      "openai": false
+    },
+    "consensus": "ระดับเตือน 🟡 เฝ้าระวัง — มวลน้ำปานกลาง — ประมาณ 9-18 ชม. หรือช่วง 24/05 22:25–25/05 07:16",
+    "note": "AI Council ปิดอยู่หรือยังไม่ได้ตั้ง API keys"
+  },
+  "safe_mode_blocked": false
+}
