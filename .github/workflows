@@ -1,0 +1,85 @@
+name: Inburi Water Watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    # รายงานประจำวัน 3 รอบ เวลาไทย: 07:00, 13:00, 19:00 = UTC 00, 06, 12
+    - cron: "0 0,6,12 * * *"
+    # เฝ้าระวังด่วนทุก 30 นาที
+    - cron: "*/30 * * * *"
+
+jobs:
+  daily-report:
+    name: Daily report and post
+    runs-on: ubuntu-latest
+    # รันเมื่อ trigger ด้วยมือ หรือ cron รายงานประจำวัน
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 0,6,12 * * *'
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: pytest -q
+      - name: Run daily report and post to Make.com
+        env:
+          TZ: Asia/Bangkok
+          SAFE_MODE: "true"
+          DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+          MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+          INBURI_BANK_LEVEL_MSL: ${{ vars.INBURI_BANK_LEVEL_MSL || '13.00' }}
+          AI_COUNCIL_ENABLED: ${{ vars.AI_COUNCIL_ENABLED || 'false' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          REQUEST_TIMEOUT_S: ${{ vars.REQUEST_TIMEOUT_S || '20' }}
+        run: python main_water.py --post
+      - name: Upload output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: inburi-water-output-daily
+          path: outputs/
+
+  alert-watch:
+    name: Urgent alert checker
+    runs-on: ubuntu-latest
+    # รันเฉพาะ cron เฝ้าระวัง 30 นาที เท่านั้น
+    if: github.event.schedule == '*/30 * * * *'
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run urgent alert checker
+        env:
+          TZ: Asia/Bangkok
+          SAFE_MODE: "true"
+          DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+          MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+          INBURI_BANK_LEVEL_MSL: ${{ vars.INBURI_BANK_LEVEL_MSL || '13.00' }}
+          ALERT_COOLDOWN_MINUTES: ${{ vars.ALERT_COOLDOWN_MINUTES || '120' }}
+          AI_COUNCIL_ENABLED: ${{ vars.AI_COUNCIL_ENABLED || 'false' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          REQUEST_TIMEOUT_S: ${{ vars.REQUEST_TIMEOUT_S || '20' }}
+        run: python alert_water.py --post
+      - name: Upload output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: inburi-water-output-alert
+          path: outputs/
