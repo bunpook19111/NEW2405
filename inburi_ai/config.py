@@ -32,6 +32,8 @@ class Settings:
     ai_council_enabled: bool = _bool("AI_COUNCIL_ENABLED", False)
     alert_cooldown_minutes: int = int(os.getenv("ALERT_COOLDOWN_MINUTES", "120"))
     level_min_msl: float = float(os.getenv("INBURI_LEVEL_MIN_MSL", "8.0"))
+    # Image hosting: "imgbb" (default) หรือ "cloudinary"
+    image_host: str = os.getenv("IMAGE_HOST", "imgbb").lower().strip()
 
 
 SETTINGS = Settings()
