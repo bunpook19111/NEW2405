@@ -1,0 +1,57 @@
+name: Water Watch
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "0 0,6,12 * * *"
+    - cron: "*/30 * * * *"
+
+jobs:
+
+  daily-report:
+    if: github.event.schedule != '*/30 * * * *'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - run: pytest -q
+
+      - run: python main_water.py --post
+        env:
+          TZ: Asia/Bangkok
+          SAFE_MODE: true
+          DRY_RUN: false
+          MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: inburi-water-output-daily
+          path: outputs/
+
+  alert-watch:
+    if: github.event.schedule == '*/30 * * * *'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - run: python alert_water.py
+        env:
+          TZ: Asia/Bangkok
+          SAFE_MODE: true
+          DRY_RUN: false
+          MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
