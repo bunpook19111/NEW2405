@@ -3,9 +3,9 @@ name: water-watch
 on:
   workflow_dispatch:
   schedule:
-    # รันรายงานประจำวันเวลา 07:00 น. ไทย = 00:00 UTC
+    # รายงานประจำวัน 07:00 น. ไทย = 00:00 UTC
     - cron: "0 0 * * *"
-    # รันตรวจแจ้งเตือนทุก 3 ชั่วโมง
+    # ตรวจแจ้งเตือนทุก 3 ชั่วโมง (ลดเป็น */6 ถ้าอยากประหยัด operations ของ Make)
     - cron: "0 */3 * * *"
 
 permissions:
@@ -20,12 +20,12 @@ jobs:
     env:
       TZ: Asia/Bangkok
       SAFE_MODE: "true"
-      DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+      # สำคัญ: ต้องเป็น false ถึงจะส่งเข้า Make จริง (ค่าตั้งต้นในโค้ดคือ true = ไม่ส่ง)
+      DRY_RUN: "false"
 
       IMAGE_HOST: ${{ secrets.IMAGE_HOST }}
       IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
       MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
-
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
@@ -38,23 +38,21 @@ jobs:
         with:
           python-version: "3.11"
 
+      # ติดตั้งฟอนต์ไทย + cairo เพื่อให้รูป PNG มีตัวอักษรไทย (ไม่เป็นกล่อง)
+      - name: Install Thai fonts and cairo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-thai-tlwg libcairo2 libcairo2-dev
+          fc-cache -f
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run daily report
-        run: |
-          if [ -f main.py ]; then
-            python main.py
-          elif [ -f app.py ]; then
-            python app.py
-          elif [ -f main_water.py ]; then
-            python main_water.py
-          else
-            echo "No main.py, app.py, or main_water.py found"
-            exit 1
-          fi
+      # สำคัญ: ต้องมี --post ถึงจะยิง webhook เข้า Make (ไม่งั้นแค่สร้างรูปแล้วจบ)
+      - name: Run daily report and post
+        run: python main.py --post
 
   alert-watch:
     name: Flood Alert Watch
@@ -64,12 +62,11 @@ jobs:
     env:
       TZ: Asia/Bangkok
       SAFE_MODE: "true"
-      DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+      DRY_RUN: "false"
 
       IMAGE_HOST: ${{ secrets.IMAGE_HOST }}
       IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
       MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
-
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
@@ -82,22 +79,16 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Thai fonts and cairo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-thai-tlwg libcairo2 libcairo2-dev
+          fc-cache -f
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run alert watch
-        run: |
-          if [ -f alert_water.py ]; then
-            python alert_water.py
-          elif [ -f main_water.py ]; then
-            python main_water.py
-          elif [ -f main.py ]; then
-            python main.py
-          elif [ -f app.py ]; then
-            python app.py
-          else
-            echo "No alert_water.py, main_water.py, main.py, or app.py found"
-            exit 1
-          fi
+      - name: Run alert watch and post
+        run: python main.py --post
