@@ -1,0 +1,117 @@
+name: water-watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    # รันรายงานประจำวันเวลา 07:00 น. ไทย = 00:00 UTC
+    - cron: "0 0 * * *"
+    # รันตรวจแจ้งเตือนทุก 3 ชั่วโมง
+    - cron: "0 */3 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  daily-report:
+    name: Daily AI Water Report
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 0 * * *'
+
+    env:
+      TZ: Asia/Bangkok
+      SAFE_MODE: "true"
+      DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+
+      IMAGE_HOST: ${{ secrets.IMAGE_HOST }}
+      IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+      MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # สำคัญ: ติดตั้งฟอนต์ไทย + ไลบรารี cairo เพื่อให้รูป PNG มีตัวอักษรไทย (ไม่เป็นกล่อง □)
+      - name: Install Thai fonts and cairo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-thai-tlwg libcairo2 libcairo2-dev
+          fc-cache -f
+          echo "ฟอนต์ไทยที่ติดตั้ง:"; fc-list :lang=th | head
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run daily report
+        run: |
+          if [ -f main.py ]; then
+            python main.py
+          elif [ -f app.py ]; then
+            python app.py
+          elif [ -f main_water.py ]; then
+            python main_water.py
+          else
+            echo "No main.py, app.py, or main_water.py found"
+            exit 1
+          fi
+
+  alert-watch:
+    name: Flood Alert Watch
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 */3 * * *'
+
+    env:
+      TZ: Asia/Bangkok
+      SAFE_MODE: "true"
+      DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+
+      IMAGE_HOST: ${{ secrets.IMAGE_HOST }}
+      IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+      MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Thai fonts and cairo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-thai-tlwg libcairo2 libcairo2-dev
+          fc-cache -f
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run alert watch
+        run: |
+          if [ -f alert_water.py ]; then
+            python alert_water.py
+          elif [ -f main_water.py ]; then
+            python main_water.py
+          elif [ -f main.py ]; then
+            python main.py
+          elif [ -f app.py ]; then
+            python app.py
+          else
+            echo "No alert_water.py, main_water.py, main.py, or app.py found"
+            exit 1
+          fi
